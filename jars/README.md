@@ -1,0 +1,1 @@
+use `build.sh` to build dependencies
