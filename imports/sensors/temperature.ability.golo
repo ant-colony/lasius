@@ -3,7 +3,7 @@ module temperature.ability
 import functional
 
 ----
-
+minimal constructor for Temperature object
 ----
 local function temperature = -> DynamicObject()
   : minTemperature(-10.0)
@@ -23,7 +23,7 @@ local function temperature = -> DynamicObject()
     )
 
 ----
-
+Public constructor for Temperature object
 ----
 function temperature = |minTemperature, maxTemperature| {
 
@@ -33,18 +33,18 @@ function temperature = |minTemperature, maxTemperature| {
               : minTemperature(minTemperature)
               : maxTemperature(maxTemperature)
 
-  checkIsNotNull(item=minTemperature, errMessage="temperature: minTemperature must be not Null")(
-    |item| {},
-    |errMessage| {
+  checkIsNotNull(item=minTemperature, err="temperature: minTemperature must be not Null"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: minTemperature = 0")
       res: minTemperature(0)
     }
   )
 
-  checkIsNotNull(item=maxTemperature, errMessage="temperature: maxTemperature must be not Null")(
-    |item| {},
-    |errMessage| {
+  checkIsNotNull(item=maxTemperature, err="temperature: maxTemperature must be not Null"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: maxTemperature = 0")
       res: maxTemperature(0)
@@ -54,18 +54,18 @@ function temperature = |minTemperature, maxTemperature| {
   checkIsGreater(
     item=res: maxTemperature(),
     value=res: minTemperature(),
-    errMessage="temperature: maxTemperature must be greater than minTemperature")(
-      |item| {},
-      |errMessage| {
+    err="temperature: maxTemperature must be greater than minTemperature"): bind(
+      success=|item| {},
+      failure=|errMessage| {
         failures: add(errMessage)
         failures: add("action: maxTemperature = minTemperature")
         res: maxTemperature(res: minTemperature())
       }
   )
 
-  checkIsEmpty(collection=failures, errMessage="temperature: some failures:")(
-    |collection| {},
-    |errMessage| {
+  checkIsEmpty(collection=failures, err="temperature: some failures:"): bind(
+    success=|collection| {},
+    failure=|errMessage| {
       println(errMessage)
       println(failures)
     }

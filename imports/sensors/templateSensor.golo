@@ -4,7 +4,9 @@ import gololang.concurrent.workers.WorkerEnvironment
 import functional
 
 ----
-You can define your own template
+templateSensor is the minimal structure of a sensor
+Of course, you can define your own template
+This is the local constructor of templateSensor
 ----
 local function templateSensor = -> DynamicObject()
   : gateway(null)     # ?
@@ -28,9 +30,9 @@ local function templateSensor = -> DynamicObject()
       checkIsEqual(
         item=message: get("topic"),
         value="get_value",
-        errMessage="WARNING: templateSensor:update, no topic=='get_value'"
-      )(
-        |item| { this: notifyGateway()}, |errMessage| { println(errMessage) }
+        err="WARNING: templateSensor:update, no topic=='get_value'"
+      ): bind(
+        success=|item| { this: notifyGateway()}, failure=|errMessage| { println(errMessage) }
       )
     })
   : define("generateData", |this| {
@@ -58,7 +60,7 @@ local function templateSensor = -> DynamicObject()
     })
 
 ----
-
+Public constructor of templateSensor
 ----
 function templateSensor = |id, topic, delay, gateway, execEnv| {
   let failures = list[]
@@ -70,65 +72,72 @@ function templateSensor = |id, topic, delay, gateway, execEnv| {
               : execEnv(execEnv)
               # : delay(delay)
 
-  checkIsNotNull(item=delay, errMessage="templateSensor: delay must be not Null")(
-    |item| {},
-    |errMessage| {
+  checkIsNotNull(item=delay, err="templateSensor: delay must be not Null"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: delay = default delay")
     }
   )
 
-  checkIsLong(item=delay, errMessage="templateSensor: delay must be a Long")(
-    |item| {
+  checkIsLong(item=delay, err="templateSensor: delay must be a Long"): bind(
+    success=|item| {
       res: delay(delay)
     },
-    |errMessage| {
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: delay = default delay")
     }
   )
 
-  checkIsString(item=id, errMessage="templateSensor: id must be a string")(
-    |item| {},
-    |errMessage| {
+  checkIsString(item=id, err="templateSensor: id must be a string"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: id = uuid()")
       res: id(uuid())
     }
   )
-  checkIsNotNull(item=id, errMessage="templateSensor: id must be not Null")(
-    |item| {},
-    |errMessage| {
+  checkIsNotNull(item=id, err="templateSensor: id must be not Null"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: id = uuid()")
       res: id(uuid())
     }
   )
 
-  checkIsString(item=topic, errMessage="templateSensor: topic must be a string")(
-    |item| {},
-    |errMessage| {
+  checkIsString(item=topic, err="templateSensor: topic must be a string"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: topic = topic_unknown")
       res: topic("topic_unknown")
     }
   )
-  checkIsNotNull(item=topic, errMessage="templateSensor: topic must be not Null")(
-    |item| {},
-    |errMessage| {
+  checkIsNotNull(item=topic, err="templateSensor: topic must be not Null"): bind(
+    success=|item| {},
+    failure=|errMessage| {
       failures: add(errMessage)
       failures: add("action: topic = topic_unknown")
       res: topic("topic_unknown")
     }
   )
 
-  checkIsEmpty(collection=failures, errMessage="templateSensor: some failures")(
-    |collection| {},
-    |errMessage| {
+  checkIsEmpty(collection=failures, err="templateSensor: some failures"): bind(
+    success=|collection| {},
+    failure=|errMessage| {
       println(errMessage)
       println(failures)
     }
   )
 
   return res
+}
+
+function templateSensor = |id, topic, delay| {
+  return templateSensor(id=id, topic=topic, delay=delay, gateway=null, execEnv=null)
+}
+function templateSensor = |id, topic| {
+  return templateSensor(id=id, topic=topic, delay=1000_L, gateway=null, execEnv=null)
 }

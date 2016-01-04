@@ -6,7 +6,22 @@ import templateSensor
 import temperature.ability
 
 ----
-Sister project of AttA
+##Sister project of AttA
+
+###How to create a sensor?
+
+You have to
+
+- call templateSensor constructor
+- do mixin with "some abilities" (abilities are DynamicObjects that provide method to simulate sensor's data)
+- add a `generateData` method (it uses abilities methods and properties to calculate data)
+- add a `data` method that returns data
+
+- `generateData()` is run periodically by the sensor (see `delay` property)
+- `data()` will be called by the gateway
+
+*Remarks: abilities are not mandatory, you can do all with `generateData()`, but it could be interesting to reuse several abilities for different sensors*
+
 ----
 function main = |args| {
   let env = WorkerEnvironment.builder(): withCachedThreadPool()
