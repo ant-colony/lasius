@@ -22,8 +22,6 @@ You have to
 
 *Remarks: abilities are not mandatory, you can do all with `generateData()`, but it could be interesting to reuse several abilities for different sensors*
 
-
-
 ----
 function main = |args| {
   let env = WorkerEnvironment.builder(): withCachedThreadPool()

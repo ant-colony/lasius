@@ -134,3 +134,10 @@ function templateSensor = |id, topic, delay, gateway, execEnv| {
 
   return res
 }
+
+function templateSensor = |id, topic, delay| {
+  return templateSensor(id=id, topic=topic, delay=delay, gateway=null, execEnv=null)
+}
+function templateSensor = |id, topic| {
+  return templateSensor(id=id, topic=topic, delay=1000_L, gateway=null, execEnv=null)
+}

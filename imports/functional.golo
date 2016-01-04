@@ -11,6 +11,15 @@ module functional
 #  }
 #}
 
+#Kind of Ternary operator
+function T = |condition| {
+  return |trueValue| {
+    return |falseValue| {
+      if condition { return trueValue } else { return falseValue }
+    }
+  }
+}
+
 union Result = {
   Success = { value }
   Failure = { value }
@@ -24,6 +33,17 @@ augment Result {
       }
       otherwise {
         return failure(this: value())
+      }
+    }
+  }
+
+  function getOrElse = |this, defaultValue| {
+    case {
+      when this oftype types.Result$Success.class {
+        return this: value()
+      }
+      otherwise {
+        return defaultValue
       }
     }
   }
