@@ -4,7 +4,9 @@ import gololang.concurrent.workers.WorkerEnvironment
 import functional
 
 ----
-You can define your own template
+templateSensor is the minimal structure of a sensor
+Of course, you can define your own template
+This is the local constructor of templateSensor
 ----
 local function templateSensor = -> DynamicObject()
   : gateway(null)     # ?
@@ -58,7 +60,7 @@ local function templateSensor = -> DynamicObject()
     })
 
 ----
-
+Public constructor of templateSensor
 ----
 function templateSensor = |id, topic, delay, gateway, execEnv| {
   let failures = list[]

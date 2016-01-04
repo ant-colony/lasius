@@ -29,23 +29,7 @@ augment Result {
   }
 }
 
-union Option = {
- Some = { value }
- None
-}
 
-augment Option {
-  function checkIsNotNone = |this, err| -> match {
-    when this: equals(Option.None()) then Result.Failure(err)
-    otherwise Result.Success(this)
-  }
-
-  function getOrElse = |this, elseValue| ->
-    this: checkIsNotNone(elseValue): bind(
-      success=|some| -> some: value(),
-      failure=|valueIfError| -> valueIfError
-    )
-}
 
 function checkIsEqual = |item, value, err|-> match {
   when item: equals(value) then Result.Success(item)

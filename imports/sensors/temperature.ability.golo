@@ -3,7 +3,7 @@ module temperature.ability
 import functional
 
 ----
-
+minimal constructor for Temperature object
 ----
 local function temperature = -> DynamicObject()
   : minTemperature(-10.0)
@@ -23,7 +23,7 @@ local function temperature = -> DynamicObject()
     )
 
 ----
-
+Public constructor for Temperature object
 ----
 function temperature = |minTemperature, maxTemperature| {
 
